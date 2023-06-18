@@ -19,39 +19,47 @@ const publicController = {
     res.render("public/github", { isLogin: true, msj: msj, role: role });
   },
   profile: (req, res) => {
-    const { rol, email } = res.locals.resUser;
+    const { role, email } = res.locals.resUser;
     const resSession = res.locals.resSession;
     res.render("public/profile", {
-      rol: rol,
+      role: role,
       user: email,
       body: resSession,
       style: "/css/profile.css",
     });
   },
   home: (req, res) => {
-    const { rol, email } = res.locals.resUser;
+    const { role, email } = req.user.user;
     publicProducts = res.locals.resProducts;
-    res.render("public/home", { rol: rol, user: email, body: publicProducts });
+    res.render("public/home", {
+      role: role,
+      user: email,
+      body: publicProducts,
+    });
   },
   products: (req, res) => {
-    const { rol, email } = res.locals.resUser;
-    const user= req.user; 
+    const { role, email } = req.user.user;
+    const user = req.user;
     publicProducts = res.locals.resProducts;
     res.render("public/products", {
-      rol: rol,
+      role: role,
       user: email,
       body: publicProducts,
     });
   },
   carts: (req, res) => {
-    const { rol, email } = res.locals.resUser;
+    const { role, email } = req.user.user;
     publicCarts = res.locals.resCarts;
-    res.render("public/cart", { rol: rol, user: email, body: publicCarts });
+    res.render("public/cart", { role: role, user: email, body: publicCarts });
   },
   chat: (req, res) => {
-    const { rol, email } = res.locals.resUser;
+    const { role, email } = req.user.user;
     publicMessages = res.locals.resMessages;
-    res.render("public/chat", { rol: rol, user: email, body: publicMessages });
+    res.render("public/chat", {
+      role: role,
+      user: email,
+      body: publicMessages,
+    });
   },
 };
 

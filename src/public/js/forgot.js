@@ -120,7 +120,7 @@ form.addEventListener("submit", async (e) => {
           showConfirmButton: false,
           allowOutsideClick: false,
         });
-    } else if (status === 404) {
+    } else if (status === 404||401) {
       Swal.fire({
         title: recoveryData.error,
         text: "Your credentials entered are incorrect",

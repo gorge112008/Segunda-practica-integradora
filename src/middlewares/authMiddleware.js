@@ -6,7 +6,10 @@ const auth = async (req, res, next) => {
         req.user.email === "adminJorge@coder.com" ||
         req.user.email === "adminAlhena@coder.com"
       ) {
-        req.session.admin = req.session.admin || req.user;
+        const { role, ...resUser } = req.user._doc;
+        const newUser = { role: "admin", ...resUser };
+        req.session.admin = req.session.admin || newUser;
+        req.user=newUser;
       } else {
         req.session.user = req.session.user || req.user;
       }

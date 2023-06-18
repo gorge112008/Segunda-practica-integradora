@@ -14,7 +14,7 @@ export const isValidPassword = (password, user) =>
 
 export const generateToken = (user) => {
   const creationTime = new Date();
-  const token = jwt.sign({ user, role:"user", creationTime }, PRIVATE_KEY, {
+  const token = jwt.sign({ user, creationTime }, PRIVATE_KEY, {
     expiresIn: "1h",
   });
   return token;
@@ -62,8 +62,12 @@ export const passportCall = (strategy) => {
 export const authorization = (role) => {
   return async (req, res, next) => {
     if (!req.user) return res.status(401).send({ error: "Unauthorized" });
-    if (req.user.role != role)
-      return res.status(403).send({ error: "No permissions" });
+    if (!role.includes(req.user.user.role))
+      if (role.includes("admin")) {
+        return res.status(403).render("private/noAdmin", { isLogin: true });
+      }else{
+        return res.status(403).send({error:"No permissions"});
+      }
     next();
   };
 };

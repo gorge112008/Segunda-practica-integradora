@@ -54,29 +54,32 @@ export const initializePassport = () => {
               req.sessionStore.all((error, sessions) => {
                 if (error) {
                   return done(null, error);
-                }
-                const adminSessions = sessions.filter(
-                  (session) => session.admin
-                );
-                const userSessions = sessions.filter((session) => session.user);
-                const activeAdminSessions = adminSessions.filter(
-                  (session) => session.admin.email == user.email
-                );
-                const activeUserSessions = userSessions.filter(
-                  (session) => session.user.email == user.email
-                );
-                if (
-                  activeAdminSessions.length > 0 ||
-                  activeUserSessions.length > 0
-                ) {
-                  const err = {
-                    message:
-                      "The mail already has the active session. Please try again later (10 min max.)",
-                  };
-                  return done(null, false, err);
                 } else {
-                  delete user._doc.password; //IMPORTANT: delete password from user
-                  return done(null, user);
+                  const adminSessions = sessions.filter(
+                    (session) => session.admin
+                  );
+                  const userSessions = sessions.filter(
+                    (session) => session.user
+                  );
+                  const activeAdminSessions = adminSessions.filter(
+                    (session) => session.admin.email == user.email
+                  );
+                  const activeUserSessions = userSessions.filter(
+                    (session) => session.user.email == user.email
+                  );
+                  if (
+                    activeAdminSessions.length > 0 ||
+                    activeUserSessions.length > 0
+                  ) {
+                    const err = {
+                      message:
+                        "The mail already has the active session. Please try again later (10 min max.)",
+                    };
+                    return done(null, false, err);
+                  } else {
+                    delete user._doc.password; //IMPORTANT: delete password from user
+                    return done(null, user);
+                  }
                 }
               });
             } else {
@@ -111,7 +114,10 @@ export const initializePassport = () => {
             delete response._doc.password;
             return done(null, response);
           } else {
-            return done(null, false);
+            const err = {
+              message: "An error has occurred with your credentials!",
+            };
+            return done(null, false, err);
           }
         } catch (error) {
           return done(error);
@@ -171,14 +177,8 @@ export const initializePassport = () => {
   );
 };
 
-const cookkieExtractor = (req) => {
-  let token = null;
-  if (req && req.signedCookies) {
-    token = req.signedCookies["coderCookieToken"];
-  }
-  return token;
-};
-
+//Al usar el middleware passportCall se delega la funcion del serializador...
+//Se dejara habilitado por si las dudas.
 passport.serializeUser((user, done) => {
   try {
     done(null, user._id);
@@ -197,3 +197,11 @@ passport.deserializeUser(async (id, done) => {
     done(error);
   }
 });
+
+const cookkieExtractor = (req) => {
+  let token = null;
+  if (req && req.signedCookies) {
+    token = req.signedCookies["coderCookieToken"];
+  }
+  return token;
+};

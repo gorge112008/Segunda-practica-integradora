@@ -999,6 +999,7 @@ btnClearCart.addEventListener("click", () => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       let idCart = storeCarts[0]._id;
+      await validateCartStock(idCart);
       deleteAllProductsCart(idCart)
         .then(async (data) => {
           if (data.status === 200) {
