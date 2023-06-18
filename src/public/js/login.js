@@ -27,6 +27,7 @@ class LoginUser {
 async function VerificateSession() {
   try {
     let response = await fetch(Urlsession + "session", {
+      method: "GET",
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,

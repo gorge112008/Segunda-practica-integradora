@@ -5,12 +5,12 @@ import { authorization, generateToken, passportCall } from "../../utils.js";
 const routerSessions = Router();
 
 /*****************************************************************GET*************************************************************/
-routerSessions.get("/sessions/session", (req, res) => {
+routerSessions.get("/sessions/session",passportCall("jwt"), (req, res) => {
   try {
     if (req.user) {
       const role = req.session.admin ? "admin" : "user";
-      const userName = req.user.first_name;
-      const session = req.user;
+      const userName = req.user.user.first_name;
+      const session = req.user.user;
       req.session.counter++;
       const msj = `WELCOME BACK ${userName.toUpperCase()}, THIS IS YOUR ${
         req.session.counter
@@ -31,10 +31,6 @@ routerSessions.get(
   async (req, res) => {
     try {
       const session = req.user;
-      //const role = req.session.admin ? "admin" : "user";
-      //const userName = req.user.first_name;
-      //const msj = `WELCOME ${userName.toUpperCase()}`;
-      //res.status(200).json({ msj: msj, session: session, role: role });
       res.send(session);
     } catch (error) {
       console.error("Error reading session " + error);

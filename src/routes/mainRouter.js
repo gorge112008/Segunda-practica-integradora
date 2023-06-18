@@ -5,6 +5,7 @@ import middlewareInitCart from "../middlewares/initCartMiddleware.js";
 import validateSession from "../middlewares/validateSessionMiddleware.js";
 import publicController from "../controllers/publicController.js";
 import privateController from "../controllers/privateController.js";
+import { authorization , passportCall} from "../utils.js";
 
 const routerViews = Router();
 
@@ -22,56 +23,64 @@ routerViews.get("/profile", validateSession, publicController.profile);
 
 routerViews.get(
   "/home",
-  validateSession,
+  passportCall("jwt"),
+  authorization(["user", "admin"]),
   middlewareInitProducts,
   publicController.home
 );
 
 routerViews.get(
   "/realtimeproducts",
-  validateSession,
+  passportCall("jwt"),
+  authorization("admin"),
   middlewareInitProducts,
   privateController.realtimeproducts
 );
 
 routerViews.get(
   "/realtimeproducts/:pid",
-  validateSession,
+  passportCall("jwt"),
+  authorization("admin"),
   middlewareInitProducts,
   privateController.realtimeproducts
 );
 
 routerViews.get(
   "/products",
-  validateSession,
+  passportCall("jwt"),
+  authorization(["user", "admin"]),
   middlewareInitProducts,
   publicController.products
 );
 
 routerViews.get(
   "/products/:pid",
-  validateSession,
+  passportCall("jwt"),
+  authorization(["user", "admin"]),
   middlewareInitProducts,
   publicController.products
 );
 
 routerViews.get(
   "/cart",
-  validateSession,
+  passportCall("jwt"),
+  authorization(["user", "admin"]),
   middlewareInitCart,
   publicController.carts
 );
 
 routerViews.get(
   "/cart/:cid",
-  validateSession,
+  passportCall("jwt"),
+  authorization(["user", "admin"]),
   middlewareInitCart,
   publicController.carts
 );
 
 routerViews.get(
   "/chat",
-  validateSession,
+  passportCall("jwt"),
+  authorization(["user", "admin"]),
   middlewareInitMessages,
   publicController.chat
 );

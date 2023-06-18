@@ -536,7 +536,7 @@ async function updateData(id, data) {
 async function updateCarts(idproduct) {
   const storeCarts = await getDataCarts();
   for (const listCart of storeCarts) {
-    deletedProductCart(listCart._id, idproduct)
+    deletedProductCart(listCart._id, idproduct);
   }
 }
 

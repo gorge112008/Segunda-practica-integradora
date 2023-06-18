@@ -12,7 +12,7 @@ const usersSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "carts",
   },
-  role: { type: String, default: "User" },
+  role: { type: String, default: "user" },
 });
 
 export const userModel = mongoose.model(usersCollection, usersSchema);

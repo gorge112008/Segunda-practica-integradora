@@ -606,8 +606,6 @@ socket.on("f5updateProduct", async (updatedMsj) => {
     let productUpdate = await getDatabyID(storeProducts[0]._id);
     storeProducts = productUpdate;
     selectAction();
-    const btnDel = document.querySelector(".card__btnDelete");
-    btnDel.classList.remove("hidden");
   } else {
     storeProducts = await getData({});
     filters();
