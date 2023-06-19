@@ -5,7 +5,7 @@ import middlewareInitCart from "../middlewares/initCartMiddleware.js";
 import validateSession from "../middlewares/validateSessionMiddleware.js";
 import publicController from "../controllers/publicController.js";
 import privateController from "../controllers/privateController.js";
-import { authorization, generateToken, passportCall } from "../utils.js";
+import {passportCall } from "../utils.js";
 
 export default class ViewsRouter extends AppRouter {
   constructor() {

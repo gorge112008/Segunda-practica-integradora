@@ -1,17 +1,37 @@
-import { ProductFM } from "../dao/Mongo/classes/DBmanager.js";
+//import { ProductDAO } from "../dao/Mongo/classes/DBmanager.js";
+import { ProductDAO } from "../dao/index.js";
 
 class ListProducts {
-  constructor(limit,sort,listQuery,payload,totalPages,prevPage,nextPage,page,hasPrevPage,hasNextPage) {
+  constructor(
+    limit,
+    sort,
+    listQuery,
+    payload,
+    totalPages,
+    prevPage,
+    nextPage,
+    page,
+    hasPrevPage,
+    hasNextPage
+  ) {
     this.status = "success";
     this.payload = payload;
-    this.totalPages = totalPages;
+    this.totalPages = totalPages || 1;
     this.prevPage = prevPage;
     this.nextPage = nextPage;
-    this.page = page;
-    this.hasPrevPage = hasPrevPage;
-    this.hasNextPage = hasNextPage;
-    hasPrevPage?this.prevLink=`/api/products?limit=${limit}${sort?`&sort=${sort}`:``}&page=${prevPage}${listQuery}`:null;
-    hasNextPage?this.nexLink=`/api/products?limit=${limit}${sort?`&sort=${sort}`:``}&page=${nextPage}${listQuery}`:null;
+    this.page = page || 1;
+    this.hasPrevPage = hasPrevPage || false;
+    this.hasNextPage = hasNextPage || false;
+    hasPrevPage
+      ? (this.prevLink = `/api/products?limit=${limit}${
+          sort ? `&sort=${sort}` : ``
+        }&page=${prevPage}${listQuery}`)
+      : null;
+    hasNextPage
+      ? (this.nexLink = `/api/products?limit=${limit}${
+          sort ? `&sort=${sort}` : ``
+        }&page=${nextPage}${listQuery}`)
+      : null;
   }
 }
 
@@ -31,24 +51,36 @@ const middlewareGetProducts = async (req, res, next) => {
     if (reqQuery !== "") {
       const { limit, page, sort, ...rest } = reqQuery;
       query = { ...rest };
-    }else{
-      query={};
+    } else {
+      query = {};
     }
-    let listQuery="";
+    let listQuery = "";
     for (const key in query) {
       if (Object.hasOwnProperty.call(query, key)) {
         const value = query[key];
-        listQuery+=`&${key}=${value}`;
+        listQuery += `&${key}=${value}`;
       }
     }
-    
-    const products = await ProductFM.getProducts({
+    const products = await ProductDAO.getProducts({
       limit,
       page,
       sort,
       query,
     });
-    const resProducts=new ListProducts(limit,reqSort,listQuery,products.docs,products.totalPages,products.prevPage,products.nextPage,products.page,products.hasPrevPage,products.hasNextPage,products.prevLink,products.nexLink);
+    const resProducts = new ListProducts(
+      limit,
+      reqSort,
+      listQuery,
+      products.docs||products,
+      products.totalPages,
+      products.prevPage,
+      products.nextPage,
+      products.page,
+      products.hasPrevPage,
+      products.hasNextPage,
+      products.prevLink,
+      products.nexLink
+    );
     res.locals.products = resProducts;
     next();
   } catch (error) {

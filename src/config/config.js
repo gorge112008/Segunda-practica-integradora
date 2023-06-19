@@ -1,9 +1,19 @@
 import dotenv from "dotenv";
+import {Command} from "commander";
 
-dotenv.config();
+const program = new Command();
 
-const { env } = process;
-const { USER_MONGO, PASS_MONGO, DB_MONGO, PORT } = env;
+program.option("--mode <mode>", "Execution mode", "development");
+
+program.parse();
+
+const enviroment = program.opts().mode.toUpperCase();
+
+dotenv.config({
+  path: enviroment === "PRODUCTION" ? ".env.prod" : ".env.dev",
+});
+
+const { USER_MONGO, PASS_MONGO, DB_MONGO, PORT } = process.env;
 
 export default {
   mongo: {
@@ -14,3 +24,10 @@ export default {
     CONNECTION_URL: `mongodb+srv://${USER_MONGO}:${PASS_MONGO}@codercluster.xq93twh.mongodb.net/${DB_MONGO}?retryWrites=true&w=majority`,
   },
 };
+
+//MODELO DE PERSISTENCIA EN MONGO
+export const PERSISTENCE = "MONGO";
+
+/*PRUEBA DE MODELO DE PERSISTENCIA EN MEMORIA
+SOLO GET PRODUCTS 
+export const PERSISTENCE = "MEMORY";*/

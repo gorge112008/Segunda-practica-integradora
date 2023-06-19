@@ -147,7 +147,9 @@ function sendMessage() {
 
 function focusLastMessage() {
   const bubbleMessage = document.querySelectorAll(".chat__message--bubble");
-  bubbleMessage[bubbleMessage.length - 1].scrollIntoView();
+  if (bubbleMessage.length > 0) {
+    bubbleMessage[bubbleMessage.length - 1].scrollIntoView();
+  }
 }
 
 async function focusbtn() {

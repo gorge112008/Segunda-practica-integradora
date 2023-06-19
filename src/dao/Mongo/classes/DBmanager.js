@@ -5,7 +5,7 @@ import { userModel } from "../models/users.model.js";
 
 /*********************************************************PRODUCTS*************************************************************/
 
-class ProductFileManager {
+class ProductDao {
   async getProducts({ limit, page, sort, query }) {
     try {
       let products;
@@ -58,7 +58,7 @@ class ProductFileManager {
 
 /*********************************************************CARTS*************************************************************/
 
-class CartFileManager {
+class CartDao {
   async getCarts() {
     try {
       const carts = await cartsModel.find();
@@ -109,7 +109,7 @@ class CartFileManager {
 
 /*********************************************************MESSAGES*************************************************************/
 
-class MessageFileManager {
+class MessageDao {
   async getMessages() {
     try {
       const messages = await messagesModel.find();
@@ -158,7 +158,7 @@ class MessageFileManager {
 
 /*********************************************************USERS*************************************************************/
 
-class UserFileManager {
+class UserDao {
   async getUsers() {
     try {
       const Users = await userModel.find();
@@ -225,7 +225,7 @@ class UserFileManager {
 
 /*********************************************************EXPORTS*************************************************************/
 
-export const ProductFM = new ProductFileManager();
-export const CartFM = new CartFileManager();
-export const MessageFM = new MessageFileManager();
-export const UserFM = new UserFileManager();
+export const ProductDAO = new ProductDao();
+export const CartDAO = new CartDao();
+export const MessageDAO = new MessageDao();
+export const UserDAO = new UserDao();

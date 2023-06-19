@@ -1,5 +1,6 @@
 import AppRouter from "../router.js";
-import { CartFM, ProductFM } from "../../dao/Mongo/classes/DBmanager.js";
+//import { CartDAO, ProductDAO } from "../../dao/Mongo/classes/DBmanager.js";
+import { CartDAO, ProductDAO } from "../../dao/index.js";
 
 export default class CartsRouter extends AppRouter {
   constructor() {
@@ -10,7 +11,7 @@ export default class CartsRouter extends AppRouter {
     /*****************************************************************GET*************************************************************/
     this.getData("/carts", ["PUBLIC"], async (req, res) => {
       try {
-        let carts = await CartFM.getCarts();
+        let carts = await CartDAO.getCarts();
         res.sendSuccess(200, carts);
       } catch (err) {
         res.sendServerError({ error: err });
@@ -20,18 +21,32 @@ export default class CartsRouter extends AppRouter {
     this.getData("/carts/:cid", ["PUBLIC"], async (req, res) => {
       try {
         const cid = req.params.cid;
-        let cart = await CartFM.getCartId(cid);
+        let cart = await CartDAO.getCartId(cid);
         res.sendSuccess(200, cart);
       } catch (err) {
         res.sendServerError({ error: err });
       }
     });
 
+    //FORK PARA FUTURAS IMPLEMENTACIONES
+   /* this.getData("/buyProcess", ["PUBLIC"], async (req, res) => {
+      try {
+        const child = fork("./src/buyProcess.js");
+        child.send("start");
+        child.on("message", (message) => {
+          console.log("Mensaje del hijo", message);
+          res.sendSuccess(200, message);
+        });
+      } catch (error) {
+        res.sendServerError({ error: err });
+      }
+    });*/
+
     /*****************************************************************POST*************************************************************/
     this.postData("/carts", ["USER"], async (req, res) => {
       try {
         const newCart = req.body;
-        const response = await CartFM.addCart(newCart);
+        const response = await CartDAO.addCart(newCart);
         res.sendSuccess(200, response);
       } catch (err) {
         res.sendServerError({ error: err });
@@ -60,7 +75,7 @@ export default class CartsRouter extends AppRouter {
           });
           newProducts[0].payload = productsFind;
           reqProducts.products = newProducts[0];
-          const response = await CartFM.updateCart(cid, reqProducts);
+          const response = await CartDAO.updateCart(cid, reqProducts);
           res.sendSuccess(200, response);
         } else {
           res.sendUserError(400, {
@@ -75,9 +90,9 @@ export default class CartsRouter extends AppRouter {
       try {
         const cid = req.params.cid;
         const pid = req.params.pid;
-        const arrayProducts = await CartFM.getCarts();
-        const responsecid = await CartFM.getCartId(cid);
-        const responsepid = await ProductFM.getProductId(pid);
+        const arrayProducts = await CartDAO.getCarts();
+        const responsecid = await CartDAO.getCartId(cid);
+        const responsepid = await ProductDAO.getProductId(pid);
         if (!isNaN(responsepid) || !isNaN(responsecid)) {
           res.sendUserError(400, { error: `Error --> The route is not valid` });
         } else {
@@ -107,7 +122,7 @@ export default class CartsRouter extends AppRouter {
                 });
               }
               const updateProducts = { products: cartProducts[0] };
-              await CartFM.updateCart(cid, updateProducts);
+              await CartDAO.updateCart(cid, updateProducts);
             }
           });
         }
@@ -120,9 +135,9 @@ export default class CartsRouter extends AppRouter {
       try {
         const cid = req.params.cid;
         const reqProducts = req.body;
-        let cart = await CartFM.getCartId(cid);
+        let cart = await CartDAO.getCartId(cid);
         cart[0].products = [{ status: "sucess", payload: reqProducts }];
-        const response = await CartFM.updateCart(cid, cart[0]);
+        const response = await CartDAO.updateCart(cid, cart[0]);
         res.sendSuccess(200, response);
       } catch (err) {
         res.sendServerError({ error: err });
@@ -134,9 +149,9 @@ export default class CartsRouter extends AppRouter {
         const quantity = req.body.quantity;
         const cid = req.params.cid;
         const pid = req.params.pid;
-        const arrayProducts = await CartFM.getCarts();
-        const responsecid = await CartFM.getCartId(cid);
-        const responsepid = await ProductFM.getProductId(pid);
+        const arrayProducts = await CartDAO.getCarts();
+        const responsecid = await CartDAO.getCartId(cid);
+        const responsepid = await ProductDAO.getProductId(pid);
         if (!isNaN(responsepid) || !isNaN(responsecid)) {
           res.sendUserError(404, { error: `Error --> The route is not valid` });
         } else {
@@ -175,7 +190,7 @@ export default class CartsRouter extends AppRouter {
                 res.sendSuccess(200, msj);
               }
               const updateProducts = { products: cartProducts[0] };
-              await CartFM.updateCart(cid, updateProducts);
+              await CartDAO.updateCart(cid, updateProducts);
             }
           });
         }
@@ -187,7 +202,7 @@ export default class CartsRouter extends AppRouter {
     this.deleteData("/carts/:cid/delete", ["USER"], async (req, res) => {
       try {
         const cid = req.params.cid;
-        await CartFM.deleteCart(cid);
+        await CartDAO.deleteCart(cid);
         res.sendSuccess(200, { msj: "DELETED CART SUCCESSFULLY" });
       } catch (err) {
         res.sendServerError({ error: err });
@@ -196,9 +211,9 @@ export default class CartsRouter extends AppRouter {
     this.deleteData("/carts/:cid", ["USER"], async (req, res) => {
       try {
         const cid = req.params.cid;
-        let cart = await CartFM.getCartId(cid);
+        let cart = await CartDAO.getCartId(cid);
         cart[0].products = [{ status: "sucess", payload: [] }];
-        const response = await CartFM.updateCart(cid, cart[0]);
+        const response = await CartDAO.updateCart(cid, cart[0]);
         res.sendSuccess(200, response);
       } catch (err) {
         res.sendServerError({ error: err });
@@ -208,7 +223,7 @@ export default class CartsRouter extends AppRouter {
       try {
         const cid = req.params.cid;
         const pid = req.params.pid;
-        const arrayCarts = await CartFM.getCarts();
+        const arrayCarts = await CartDAO.getCarts();
         arrayCarts.forEach(async (cartItem) => {
           if (cartItem._id == cid) {
             //SI EL ARREGLO TIENE LA ID DEL CARRITO SE ENTRA
@@ -224,7 +239,7 @@ export default class CartsRouter extends AppRouter {
             newPayload != [] && payloadProducts == newPayload;
             cartProducts[0].payload = newPayload;
             const updateProducts = { products: cartProducts[0] };
-            await CartFM.updateCart(cid, updateProducts);
+            await CartDAO.updateCart(cid, updateProducts);
             res.sendSuccess(200, { msj: "DELETED SUCCESSFULLY" });
           }
         });

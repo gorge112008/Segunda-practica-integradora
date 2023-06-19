@@ -1,4 +1,3 @@
-
 const validateSession = async (req, res, next) => {
   try {
     const session = req.session;

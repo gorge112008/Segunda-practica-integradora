@@ -1,6 +1,7 @@
 import passport from "passport";
 import local from "passport-local";
-import { UserFM } from "../dao/Mongo/classes/DBmanager.js";
+//import { UserDAO } from "../dao/Mongo/classes/DBmanager.js";
+import { UserDAO } from "../dao/index.js";
 import { createHash, isValidPassword } from "../utils.js";
 import jwt from "passport-jwt";
 import GitHubStrategy from "passport-github2";
@@ -17,7 +18,7 @@ export const initializePassport = () => {
       async (req, username, password, done) => {
         const { first_name, last_name, age } = req.body;
         try {
-          const user = await UserFM.getUserUnique({
+          const user = await UserDAO.getUserUnique({
             email: username,
           });
           if (!user) {
@@ -28,8 +29,8 @@ export const initializePassport = () => {
               age: age,
               password: createHash(password),
             };
-            const response = await UserFM.addUser(newUser);
-            delete response._doc.password;
+            const response = await UserDAO.addUser(newUser);
+            response._doc && delete response._doc.password;
             return done(null, response);
           } else {
             return done(null, false, { message: "User already exists" });
@@ -46,7 +47,7 @@ export const initializePassport = () => {
       { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
         try {
-          const user = await UserFM.getUserUnique({
+          const user = await UserDAO.getUserUnique({
             email: username,
           });
           if (user) {
@@ -77,7 +78,7 @@ export const initializePassport = () => {
                     };
                     return done(null, false, err);
                   } else {
-                    delete user._doc.password; //IMPORTANT: delete password from user
+                    user._doc && delete user._doc.password; //IMPORTANT: delete password from user
                     return done(null, user);
                   }
                 }
@@ -104,14 +105,14 @@ export const initializePassport = () => {
       { passReqToCallback: false, usernameField: "email" },
       async (username, password, done) => {
         try {
-          const user = await UserFM.getUserUnique({
+          const user = await UserDAO.getUserUnique({
             email: username,
           });
           if (user) {
-            const response = await UserFM.updateUser(username, {
+            const response = await UserDAO.updateUser(username, {
               password: createHash(password),
             });
-            delete response._doc.password;
+            response._doc && delete response._doc.password;
             return done(null, response);
           } else {
             const err = {
@@ -135,7 +136,7 @@ export const initializePassport = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          let user = await UserFM.getUserUnique({
+          let user = await UserDAO.getUserUnique({
             email: profile._json.email,
           });
           if (!user) {
@@ -146,11 +147,11 @@ export const initializePassport = () => {
               age: 0,
               password: "",
             };
-            const response = await UserFM.addUser(newUser);
-            delete response._doc.password;
+            const response = await UserDAO.addUser(newUser);
+            response._doc && delete response._doc.password;
             done(null, response);
           } else {
-            delete user._doc.password;
+            user._doc && delete user._doc.password;
             done(null, user);
           }
         } catch (error) {
@@ -189,7 +190,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const User = await UserFM.getUserUnique({
+    const User = await UserDAO.getUserUnique({
       _id: id,
     });
     done(null, User);

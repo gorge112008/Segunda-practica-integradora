@@ -347,7 +347,6 @@ async function filters() {
 async function validateStatus(idExo) {
   let getProducts = await getData();
   for (const product of getProducts) {
-    console.log(JSON.stringify(product));
     if (idExo.includes(product._id)) continue;
     if (product.status == "error") {
       updateCart(product._id, { status: "success" });

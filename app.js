@@ -5,6 +5,15 @@ import { engine } from "express-handlebars";
 import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
+//IMPORTACIONES DE ROUTERS EXPRESS
+import routerProducts from "./routes/api/products.routes.js";
+import routerCarts from "./routes/api/carts.routes.js";
+import routerMessage from "./routes/api/chat.routes.js";
+import routerUser from "./routes/api/users.routes.js";
+import routerViews from "./routes/mainRouter.js";
+import routerSessions from "./routes/api/sessions.routes.js";
+import routerCookies from "./routes/api/cookies.routes.js";
+//IMPORTACIONES DE ROUTERS CUSTOM
 import ProductsRouter from "./routers/api/products.routes.js";
 import CartsRouter from "./routers/api/carts.routes.js";
 import ChatRouter from "./routers/api/chat.routes.js";
@@ -12,6 +21,7 @@ import UsersRouter from "./routers/api/users.routes.js";
 import ViewsRouter from "./routers/mainRouter.js";
 import SessionsRouter from "./routers/api/sessions.routes.js";
 import CookiesRouter from "./routers/api/cookies.routes.js";
+
 import Handlebars from "handlebars";
 import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access";
 import passport from "passport";
@@ -50,6 +60,21 @@ app.use(express.json()); //Configurar el servidor para que pueda entender los fo
 app.use(express.urlencoded({ extended: true })); //Configurar el servidor para que pueda entender los formatos URL Encoded
 app.use(passport.initialize());
 app.use(passport.session());
+/*
+//ROUTER EXPRESS CONFIGURADOS CORRECTAMENTE (INTERCAMBIABLES CON LOS CUSTOM)
+app.use("/", routerViews); 
+  app.use(
+  "/api",
+  routerCarts,
+  routerMessage,
+  routerUser,
+  routerCookies,
+  routerProducts,
+  routerSessions,
+);
+*/
+
+//ROUTER CUSTOM CONFIGURADOS CORRECTAMENTE (INTERCAMBIABLES CON LOS EXPRESS)
 app.use("/", viewsRouter.Routers());
 app.use(
   "/api",

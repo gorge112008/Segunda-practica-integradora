@@ -1,6 +1,8 @@
 import AppRouter from "../router.js";
 import auth from "../../middlewares/authMiddleware.js";
-import { authorization, generateToken, passportCall } from "../../utils.js";
+import { passportCall } from "../../utils.js";
+import sessionController from "../../controllers/sessionsController.js";
+
 export default class SessionsRouter extends AppRouter {
   constructor() {
     super();
@@ -11,54 +13,35 @@ export default class SessionsRouter extends AppRouter {
       "/sessions/session",
       ["PUBLIC"],
       passportCall("jwt"),
-      async (req, res) => {
-        try {
-          if (req.user && (req.session.user || req.session.admin)) {
-            const role = req.session.admin ? "admin" : "user";
-            const userName = req.user.user.first_name;
-            const session = req.user.user;
-            req.session.counter++;
-            const msj = `WELCOME BACK ${userName.toUpperCase()}, THIS IS YOUR ${
-              req.session.counter
-            } INCOME.`;
-            res.sendSuccess(200, { msj: msj, session: session, role: role });
-          } else {
-            res.sendUserError(401, { error: `No active session` });
-          }
-        } catch (error) {
-          res.sendServerError({ error: "Error reading session" + error });
-        }
-      }
+      sessionController.getSession
     );
 
     this.getSession(
       "/sessions/current",
       ["PUBLIC"],
       passportCall("jwt", { session: false }),
-      async (req, res) => {
-        try {
-          const session = req.user;
-          res.sendSuccess(200, session);
-        } catch (error) {
-          res.sendServerError({ error: "Error reading session " + error });
-        }
-      }
+      sessionController.getCurrentSession
     );
 
-    this.getData("/sessions/faillogin", ["PUBLIC"], (req, res) => {
-      const err = { error: "An error has occurred with your credentials!" };
-      res.sendUserError(404, err);
-    });
+    this.getData(
+      "/sessions/faillogin",
+      ["PUBLIC"],
+      sessionController.getFailLogin
+    );
 
-    this.getData("/sessions/failregister", ["PUBLIC"], (req, res) => {
-      const err = { error: "The user is already registered!" };
-      res.sendUserError(409, err);
-    });
+    this.getData(
+      "/sessions/failregister",
+      ["PUBLIC"],
+      sessionController.getFailRegister
+    );
 
-    this.getData("/sessions/failforgot", ["PUBLIC"], (req, res) => {
-      const err = { error: "An error has occurred with your credentials!" };
-      res.sendUserError(404, err);
-    });
+    this.getData(
+      "/sessions/failforgot",
+      ["PUBLIC"],
+      sessionController.getFailForgot
+    );
+
+    this.getData("/sessions/logout", ["PUBLIC"], sessionController.getLogout);
 
     this.getData(
       "/sessions/github",
@@ -66,7 +49,7 @@ export default class SessionsRouter extends AppRouter {
       passportCall("github", {
         scope: ["user:email"],
       }),
-      async (req, res) => {}
+      sessionController.getGitHubSession
     );
     this.getData(
       "/sessions/githubcallback",
@@ -75,37 +58,9 @@ export default class SessionsRouter extends AppRouter {
         failureRedirect: "/login",
       }),
       auth,
-      async (req, res) => {
-        try {
-          const session = req.user;
-          req.session.counter = 1;
-          const role = req.session.admin ? "admin" : "user";
-          const userName = req.user.first_name;
-          const msj = `WELCOME ${userName.toUpperCase()}`;
-          const login = { msj: msj, role: role };
-          const token = generateToken(session);
-          res.cookie("coderCookieToken", token, {
-            maxAge: 60 * 60 * 1000,
-            signed: true,
-          });
-          res.cookie("login", login);
-          res.redirect("/github");
-        } catch (error) {}
-      }
+      sessionController.getGitHubCallBack
     );
-    this.getData("/sessions/logout", ["PUBLIC"], (req, res) => {
-      res.clearCookie("connect.sid");
-      res.clearCookie("SessionCookie");
-      res.clearCookie("coderCookieToken");
-      req.session.destroy((err) => {
-        if (err) {
-          res.sendServerError({ error: "Failed to sign out" });
-        } else {
-          const msj = `YOU HAVE ENDED YOUR SESSION SUCCESSFULLY`;
-          res.sendSuccess(200, msj);
-        }
-      });
-    });
+
     this.postData(
       "/sessions/login",
       ["PUBLIC"],
@@ -113,28 +68,7 @@ export default class SessionsRouter extends AppRouter {
         failureRedirect: "/api/sessions/faillogin",
       }),
       auth,
-      async (req, res) => {
-        try {
-          const role = req.session.admin ? "admin" : "user";
-          const userName = req.user.first_name;
-          const session = req.user;
-          const msj = `WELCOME ${userName.toUpperCase()}`;
-          req.session.counter = 1;
-          const token = generateToken(session);
-          res.cookie("coderCookieToken", token, {
-            maxAge: 60 * 60 * 1000,
-            signed: true,
-          });
-          res.sendSuccess(200, {
-            success: msj,
-            session: session,
-            role: role,
-            token: token,
-          });
-        } catch (error) {
-          res.sendServerError({ error: "Not exist any session: " + error });
-        }
-      }
+      sessionController.postLogin
     );
     this.postData(
       "/sessions/signup",
@@ -142,21 +76,7 @@ export default class SessionsRouter extends AppRouter {
       passportCall("signup", {
         failureRedirect: "/api/sessions/failregister",
       }),
-      async (req, res) => {
-        try {
-          if (req.user && !req.user.error) {
-            const msj = {
-              success: `Email ${req.user.email} successfully registered`,
-            };
-            res.sendSuccess(201, msj);
-          } else {
-            const err = { error: "An error occurred with the registration" };
-            res.sendUserError(400, err);
-          }
-        } catch (error) {
-          res.sendServerError({ error: error });
-        }
-      }
+      sessionController.postSignup
     );
     this.postData(
       "/sessions/forgot",
@@ -164,12 +84,8 @@ export default class SessionsRouter extends AppRouter {
       passportCall("forgot", {
         failureRedirect: "/api/sessions/failforgot",
       }),
-      async (req, res) => {
-        try {
-          const msj = { success: "Success!" };
-          res.sendSuccess(200, msj);
-        } catch (error) {}
-      }
+      sessionController.postForgot
     );
+    this.getData("*", sessionController.getNotFound);
   }
 }

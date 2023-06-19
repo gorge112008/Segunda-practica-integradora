@@ -1,5 +1,6 @@
 import AppRouter from "../router.js";
-import { UserFM } from "../../dao/Mongo/classes/DBmanager.js";
+//import { UserDAO } from "../../dao/Mongo/classes/DBmanager.js";
+import { UserDAO } from "../../dao/index.js";
 
 export default class UsersRouter extends AppRouter {
   constructor() {
@@ -13,8 +14,8 @@ export default class UsersRouter extends AppRouter {
         const query = req.query;
         let users =
           Object.keys(query).length > 0
-            ? await UserFM.getUserUnique(query)
-            : await UserFM.getUsers();
+            ? await UserDAO.getUserUnique(query)
+            : await UserDAO.getUsers();
         if (limit && !isNaN(Number(limit))) {
           users = users.slice(0, limit);
         }
@@ -27,7 +28,7 @@ export default class UsersRouter extends AppRouter {
     this.getData("/users/:iud", ["PUBLIC"], async (req, res) => {
       try {
         const iud = req.params.iud;
-        let user = await UserFM.getUserId(iud);
+        let user = await UserDAO.getUserId(iud);
         res.sendSuccess(200, user);
       } catch (err) {
         res.sendServerError({ error: err });
@@ -38,7 +39,7 @@ export default class UsersRouter extends AppRouter {
     this.postData("/users", ["PUBLIC"], async (req, res) => {
       try {
         const newUser = req.body;
-        const response = await UserFM.addUser(newUser);
+        const response = await UserDAO.addUser(newUser);
         res.sendSuccess(200, response);
       } catch (err) {
         res.sendServerError({ error: err });
@@ -49,7 +50,7 @@ export default class UsersRouter extends AppRouter {
     this.deleteData("/users/:iud", ["PUBLIC"], async (req, res) => {
       try {
         const iud = req.params.iud;
-        await UserFM.deleteUser(iud);
+        await UserDAO.deleteUser(iud);
         res.sendSuccess(200, iud);
       } catch (err) {
         res.sendServerError({ error: err });

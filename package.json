@@ -1,5 +1,5 @@
 {
-  "name": "segunda-practica-integradora",
+  "name": "server-restructuring",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -9,20 +9,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gorge112008/Segunda-practica-integradora.git"
+    "url": "git+https://github.com/gorge112008/SERVER-RESTRUCTURING.git"
   },
   "keywords": [],
   "author": "Jorge Carlos Gayoso Ugas",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/gorge112008/Segunda-practica-integradora/issues"
+    "url": "https://github.com/gorge112008/SERVER-RESTRUCTURING/issues"
   },
-  "homepage": "https://github.com/gorge112008/Segunda-practica-integradora#readme",
+  "homepage": "https://github.com/gorge112008/SERVER-RESTRUCTURING#readme",
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.5",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
+    "commander": "^11.0.0",
     "connect-mongo": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -48,5 +49,6 @@
   },
   "engines": {
     "node": "18.x"
-  }
+  },
+  "description": ""
 }
