@@ -1,0 +1,315 @@
+.forgot {
+  display: flex;
+  justify-content: center;
+  border: solid black 1px;
+  background-color: #fdc;
+}
+
+.forgot__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url(../assets/foodleft.jpeg);
+  width: auto;
+  height: 90vh;
+  outline: solid black 1px;
+  transition: all ease-in-out 900ms;
+}
+
+.forgot__container__form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  width: 90%;
+  height: fit-content;
+  padding: 20px;
+  position: relative;
+  background-color: #def;
+  border-top-right-radius: 80px;
+  border-bottom-left-radius: 80px;
+  border: solid black 3px;
+  transition: all ease-in-out 900ms;
+}
+
+.forgot__form--title {
+  position: relative;
+  display: block;
+  text-align: center;
+  top: 0;
+  margin: 0;
+  width: 60%;
+}
+
+.forgot__form--title b {
+  position: relative;
+  display: block;
+  font-size: 1.5rem;
+  font-family: "Times New Roman", Times, serif;
+  color: rgb(20, 4, 169);
+  filter: drop-shadow(0 0 20px #9900ff);
+  border-bottom: solid rgb(20, 4, 169) 2px;
+}
+
+.forgot__form--contain {
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: 10px;
+  border-top-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  background-color: #ffffff;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: fit-content;
+  filter: drop-shadow(0 1px 10px #edd1ff);
+}
+
+.forgot__form--contain ul {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: fit-content;
+  width: 100%;
+}
+
+.forgot__form--contain li {
+  border: solid rgb(99, 4, 154) 2px;
+  background-color: rgb(222, 230, 245);
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 40vh;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  height: 11vh;
+}
+
+.forgot--label {
+  width: 95%;
+  font-weight: bolder;
+  position: relative;
+  font-size: 1.3rem;
+  margin: auto;
+  left: 0;
+  right: 0;
+  height: 5vh;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  color: rgb(12, 2, 82);
+  font-family: "Times New Roman", Times, serif;
+  background-color: transparent;
+  transition: all ease-in-out 900ms;
+  z-index: 1;
+}
+
+.forgot--input {
+  display: block;
+  margin: auto;
+  left: 0;
+  right: 0;
+  padding-left: 10px;
+  border-radius: 5px;
+  color: black;
+  font-size: 1rem;
+  font-family: "Times New Roman", Times, serif;
+  height: 5vh;
+  width: 35vh;
+  border: solid rgb(0, 0, 0) 2px;
+}
+
+.forgot--input:invalid {
+  display: block;
+  background-color: white;
+  color: black;
+  border-bottom: solid black 3px;
+}
+
+.forgot__form__input:hover .forgot--label,
+.forgot__form__input:focus-within .forgot--label {
+  position: relative;
+  font-size: 1.5rem;
+}
+
+.forgot__form__input:focus-within .forgot--input {
+  color: rgb(4, 4, 103);
+  border: solid black 2px;
+}
+
+.forgot__register {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: auto;
+  width: 100%;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.forgot__register input {
+  height: 2.5vh;
+  width: 2.5vh;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.forgot__register label {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.forgot__register a {
+  position: relative;
+  font-family: "Times New Roman", Times, serif;
+  padding-left: 5px;
+  color: rgb(6, 53, 182);
+  font-weight: bolder;
+  right: 0;
+}
+
+.forgot__inputBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: fit-content;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.btnLogin {
+  position: relative;
+  display: block;
+  margin: auto;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgb(217, 220, 219);
+  cursor: pointer;
+  border: solid rgb(183, 183, 183) 2px;
+  border-radius: 5px;
+  width: 40vh;
+  height: 5vh;
+  padding: 0 10px;
+}
+
+.btnLogin:hover {
+  border: solid rgb(186, 167, 0) 2px;
+  background-color: rgb(249, 209, 89);
+}
+
+.btnLogin b {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 1rem;
+  color: rgb(255, 0, 0);
+}
+
+.forgot__form__input:hover .RevealPsw{
+    display: block;
+  }
+
+.RevealPsw{
+    display: none;
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
+    margin: 0;
+    height: 2.5vh;
+    width: 2.5vh;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    z-index: 0;
+  }  
+
+.btnforgot {
+  position: relative;
+  display: block;
+  margin: auto;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border: solid rgb(9, 222, 130) 2px;
+  border-radius: 5px;
+  background-color: rgb(208, 255, 218);
+  cursor: pointer;
+  padding: 0 10px;
+  width: 40vh;
+  height: 5vh;
+  margin-bottom: 20px;
+}
+
+.btnforgot:hover {
+  border: solid rgb(1, 187, 23) 2px;
+  background-color: rgb(169, 248, 151);
+}
+
+.btnforgot b {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 1rem;
+  color: green;
+}
+
+/*CSS DEVICE < 600px (37.5rem)(base 1rem=16px) (CEL)*/
+
+@media only screen and (max-width: 37.5rem) {
+  /*DEVICE CEL forgot FORM BLOCK*/
+  .forgot__container {
+    width: 100%;
+  }
+
+  .forgot__container__form {
+    flex-direction: column;
+    width: fit-content;
+    height: 90%;
+  }
+
+  .forgot__form--contain {
+    width: fit-content;
+    height: 80%;
+    padding: 25px;
+  }
+
+  .forgot--input {
+    width: 30vh;
+  }
+
+  .forgot__inputBox {
+    flex-direction: column;
+    height: fit-content;
+  }
+
+  .forgot__register {
+    flex-direction: row;
+  }
+
+  .forgot__form--contain li {
+    width: 35vh;
+  }
+
+  .btnforgot {
+    width: 35vh;
+  }
+  .btnLogin {
+    width: 35vh;
+  }
+}
+/*CSS DEVICE > 992px (62rem) (base 16px=1rem) (LAP)*/
+
+@media only screen and (min-width: 69rem) {
+  /*DEVICE LAP forgot FORM BLOCK*/
+  .forgot__form--contain {
+    height: 90%;
+  }
+}
