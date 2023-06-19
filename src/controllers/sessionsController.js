@@ -3,10 +3,10 @@ import { generateToken } from "../utils.js";
 const sessionController = {
   getSession: async (req, res) => {
     try {
-      if (req.user && (req.session.user || req.session.admin)) {
-        const role = req.session.admin ? "admin" : "user";
-        const userName = req.user.user.first_name;
+      if (req.user && req.session.counter) {
         const session = req.user.user;
+        const role = session.role;
+        const userName = session.first_name;
         req.session.counter++;
         const msj = `WELCOME BACK ${userName.toUpperCase()}, THIS IS YOUR ${
           req.session.counter
@@ -68,9 +68,9 @@ const sessionController = {
   getGitHubSession: async (req, res) => {},
   getGitHubCallBack: async (req, res) => {
     try {
-      const role = req.session.admin ? "admin" : "user";
-      const userName = req.user.first_name;
       const session = req.user;
+      const role = session.role;
+      const userName = session.first_name;
       const msj = `WELCOME ${userName.toUpperCase()}`;
       req.session.counter = 1;
       const login = { msj: msj, role: role };
@@ -87,9 +87,9 @@ const sessionController = {
   },
   postLogin: async (req, res) => {
     try {
-      const role = req.session.admin ? "admin" : "user";
-      const userName = req.user.first_name;
       const session = req.user;
+      const role = session.role;
+      const userName =session.first_name;
       const msj = `WELCOME ${userName.toUpperCase()}`;
       req.session.counter = 1;
       const token = generateToken(session);

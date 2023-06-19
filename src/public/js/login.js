@@ -31,7 +31,6 @@ async function VerificateSession() {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
-        //"Authorization": `Bearer ${token}`
       },
       mode: "cors",
     });

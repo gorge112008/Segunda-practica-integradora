@@ -1,8 +1,9 @@
 import express from "express";
 import session from "express-session";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import { engine } from "express-handlebars";
-import mongoose from "mongoose";
+import MongoSingleton from "./utils/mongoSingletonClass.js";
 import MongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
 import ProductsRouter from "./routers/api/products.routes.js";
@@ -30,6 +31,11 @@ const usersRouter = new UsersRouter(),
   cookiesRouter = new CookiesRouter(),
   viewsRouter = new ViewsRouter();
 
+app.use(
+  cors({
+    origin: ["http://127.0.0.1:5500"],
+  })
+);
 app.use(cookieParser("S3cr3tC0d3r"));
 app.use(
   session({
@@ -77,17 +83,7 @@ app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/public")); //Configurar el servidor para que pueda entender la ruta de los archivos estaticos
 
 const environment = async () => {
-  await mongoose
-    .connect(CONNECTION_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    .then(() => {
-      console.log("Conexion a la base de datos exitosa");
-    })
-    .catch((error) => {
-      console.log(`Error en la conexion a la base de datos: ${error.message}`);
-    });
+  await MongoSingleton.getInstance(CONNECTION_URL);
 };
 
 const isValidStartDate = () => {

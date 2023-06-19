@@ -47,11 +47,32 @@ export const passportCall = (strategy) => {
     passport.authenticate(strategy, function (err, user, info) {
       if (err) return next(err);
       if (!user) {
-        return res.status(401).json({
+        if (req.path === "/sessions/current") return res.status(401).json({
           error: info.message
-            ? info.message
-            : "Authentication Error!, please login again",
+            ? info.message + ", please login again"
+            : "Unauthorized, please login again",
         });
+        if (req.path === "/sessions/session") {
+          if (req.session.counter) {
+            const session = req.session.admin
+              ? req.session.admin
+              : req.session.user;
+            const msj = "Logout and Login Again Please...";
+            return res.status(200).json({
+              success: msj,
+              session: session,
+              role: session.role,
+            });
+          } else {
+            return res.status(401).json({
+              error: info.message
+                ? info.message + ", please login again"
+                : "Unauthorized, please login again",
+            });
+          }
+        } else {
+          return res.status(401).render("unauthorized", { isLogin: true });
+        }
       }
       req.user = user;
       next();
@@ -65,8 +86,8 @@ export const authorization = (role) => {
     if (!role.includes(req.user.user.role))
       if (role.includes("admin")) {
         return res.status(403).render("private/noAdmin", { isLogin: true });
-      }else{
-        return res.status(403).send({error:"No permissions"});
+      } else {
+        return res.status(403).send({ error: "No permissions" });
       }
     next();
   };
